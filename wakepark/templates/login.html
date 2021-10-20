@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>Войти</h1>
+{% endblock %}
+
+{% block content %}
+{% for cat, message in get_flashed_messages(True) %}
+<p class="{{cat}}">{{ message }}</p>
+{% endfor %}
+
+<form action="{{ url_for('login') }}" method="post">
+    <input type="text" name="email" value="{{ email_value }}" placeholder="email"/>
+    <input type="password" name="password" value="{{ password_value }}" placeholder="Пароль"/>
+    <input type="submit" value="Войти"/>
+</form>
+
+{% endblock %}
