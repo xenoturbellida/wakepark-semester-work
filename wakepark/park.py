@@ -1,30 +1,39 @@
 from flask import Flask, request, render_template, Blueprint
-from flask_login import LoginManager
+
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash
+
+import models
+
 
 
 park = Flask(__name__)
 db = SQLAlchemy(park)
 park.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///database.db'
 park.config['SECRET_KEY'] = 'thisisasecretkey'
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# login_manager = LoginManager()
-
+park.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+import forms
 
 @park.route('/')
 def index():
-    pass
+    return render_template('index.html')
 
 
 @park.route('/signup', methods=['GET', 'POST'])
 def signup():
-    pass
+    form = forms.RegisterForm()
+    if form.validate_on_submit():
+        hashed_password = generate_password_hash(form.password.data)
+        new_user = models.User(email=form.email.data, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+    return render_template('signup.html', form=form)
 
 
 @park.route('/login', methods=['POST', 'GET'])
 def login():
-    return render_template('login.html')
+    form = forms.LoginForm()
+    return render_template('login.html', form=form)
 
 
 @park.route('/logout')
