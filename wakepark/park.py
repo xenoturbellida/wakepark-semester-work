@@ -6,13 +6,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 import models
 
-
 park = Flask(__name__)
-db = SQLAlchemy(park)
-park.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///database.db'
+park.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 park.config['SECRET_KEY'] = 'thisisasecretkey'
 park.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+db = SQLAlchemy(park)
 
 import forms
 
@@ -49,9 +47,9 @@ def login():
     if form.validate_on_submit():
         user = models.User.query.filter_by(email=form.email.data).first()
         if user:
-            print(user.password)
             if check_password_hash(user.password, form.password.data):
-                login_user(user)
+                remember = bool(form.remember_me.data)
+                login_user(user, remember)
                 return "successfull login"
     return render_template('login.html', form=form)
 

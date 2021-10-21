@@ -33,4 +33,4 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField("Войти")
 
-    remember_me = BooleanField(render_kw={"placeholder": 'Username'})
+    remember_me = BooleanField(label='Запомнить меня')
