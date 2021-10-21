@@ -9,10 +9,21 @@
 <p class="{{cat}}">{{ message }}</p>
 {% endfor %}
 
-<form action="{{ url_for('login') }}" method="post">
-    <input type="text" name="email" value="{{ email_value }}" placeholder="email"/>
-    <input type="password" name="password" value="{{ password_value }}" placeholder="Пароль"/>
-    <input type="submit" value="Войти"/>
+<!--<form action="{{ url_for('login') }}" method="post">-->
+<!--    <input type="text" name="email" value="{{ email_value }}" placeholder="email"/>-->
+<!--    <input type="password" name="password" value="{{ password_value }}" placeholder="Пароль"/>-->
+<!--    <input type="submit" value="Войти"/>-->
+<!--    <label>-->
+<!--        <input type="checkbox" name="remember_me"/>-->
+<!--    </label>Запомнить меня-->
+<!--</form>-->
+
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    {{ form.email }}
+    {{ form.password }}
+    {{ form.submit }}
+    {{ form.remember_me }}
 </form>
 
 {% endblock %}

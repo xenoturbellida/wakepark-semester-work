@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>Войти</h1>
+{% endblock %}
+
+{% block content %}
+{% for cat, message in get_flashed_messages(True) %}
+<p class="{{cat}}">{{ message }}</p>
+{% endfor %}
+
+<a href="{{ url_for('login') }}">Войти</a>
+<a href="{{ url_for('signup') }}">Зарегистрироваться</a>
+
+{% endblock %}
