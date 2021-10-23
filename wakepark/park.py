@@ -1,5 +1,8 @@
+import os
+
 from flask import Flask, request, render_template, Blueprint, redirect, url_for
 from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_migrate import Migrate
 
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -7,11 +10,19 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import models
 from wakepark.cashier.cashier import cashier
 
+
+DATABASE = 'database.db'
+DEBUG = True
+SECRET_KEY = 'thisisasecretkey'
+
 park = Flask(__name__)
+park.config.from_object(__name__)
+park.config.update(dict(DATABASE=os.path.join(park.root_path, 'database.db')))
 park.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-park.config['SECRET_KEY'] = 'thisisasecretkey'
 park.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(park)
+
+models.db.init_app(park)
+migrate = Migrate(park, models.db)
 
 import forms
 
