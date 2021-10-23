@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import models
+from wakepark.cashier.cashier import cashier
 
 park = Flask(__name__)
 park.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -14,9 +15,13 @@ db = SQLAlchemy(park)
 
 import forms
 
+park.register_blueprint(cashier, url_prefix='/cashier')
+
 login_manager = LoginManager()
 login_manager.init_app(park)
 login_manager.login_view = "login"
+
+
 
 
 @login_manager.user_loader

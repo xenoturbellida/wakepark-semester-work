@@ -1,0 +1,10 @@
+.equipment-block {
+    display: inline-block;
+    height: 10vw;
+    width: 10vw;
+    background-color: aquamarine;
+    margin: 20px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 10vw;
+}
