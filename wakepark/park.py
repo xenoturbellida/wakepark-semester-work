@@ -1,10 +1,11 @@
-from flask import Flask, render_template, redirect, url_for
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask import Flask, render_template, redirect, url_for, flash
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_migrate import Migrate
+from sqlalchemy import update
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from wakepark.cashier.cashier import cashier
-from wakepark.forms import RegisterForm, LoginForm
+from wakepark.forms import RegisterForm, LoginForm, ChangePasswordForm
 from wakepark.models import db, User
 
 DATABASE = 'database.db'
@@ -65,12 +66,28 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("login"))
+    return redirect(url_for("index"))
 
 
-@app.route("/hello")
-def hello_world():
-    return "<p>Hello, World!</p>"
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html')
+
+
+@app.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    if (form.validate_on_submit()
+            and check_password_hash(current_user.password, form.old_password.data)
+            and form.new_password.data == form.confirm_new_password.data):
+        hashed_password = generate_password_hash(form.new_password.data)
+        db.session.execute(update(User).where(User.id == current_user.get_id()).values(password=hashed_password))
+        db.session.commit()
+        flash('Пароль успешно изменён', category='success')
+        return redirect(url_for('profile'))
+    return render_template('security.html', form=form)
 
 
 if __name__ == '__main__':

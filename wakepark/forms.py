@@ -34,3 +34,20 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Войти")
 
     remember_me = BooleanField(label='Запомнить меня')
+
+
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField(
+        validators=[InputRequired(), length(min=4, max=20)],
+        render_kw={"placeholder": "Пароль", 'id': 'user_old_password'})
+
+    new_password = PasswordField(
+        validators=[InputRequired(), length(min=4, max=20)],
+        render_kw={"placeholder": "Пароль", 'id': 'user_new_password'})
+
+    confirm_new_password = PasswordField(
+        validators=[InputRequired(), length(min=4, max=20)],
+        render_kw={"placeholder": "Пароль", 'id': 'user_confirm_new_password'})
+
+    submit = SubmitField("Изменить пароль")
+

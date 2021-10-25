@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>Профиль</h1>
+{% endblock %}
+
+{% block content %}
+{% for cat, message in get_flashed_messages(True) %}
+<p class="{{cat}}">{{ message }}</p>
+{% endfor %}
+
+<a href="{{ url_for('change_password') }}">Сменить пароль</a>
+
+{% endblock %}
