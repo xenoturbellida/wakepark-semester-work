@@ -8,10 +8,10 @@ from wakepark.models import User
 class RegisterForm(FlaskForm):
     email = StringField(
         validators=[InputRequired(), length(min=4, max=40)],
-        render_kw={"placeholder": 'Email'})
+        render_kw={"placeholder": 'Email', 'id': 'email_reg'})
 
     password = PasswordField(
-        validators=[InputRequired(), length(min=4,max=20)],
+        validators=[InputRequired(), length(min=4, max=20)],
         render_kw={"placeholder": "Пароль"})
 
     submit = SubmitField("Зарегистрироваться")

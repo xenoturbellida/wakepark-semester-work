@@ -6,20 +6,34 @@
 
 {% block content %}
 {% for cat, message in get_flashed_messages(True) %}
-<p class="{{cat}}">{{ message }}</p>
+<p class="{{ cat }}">{{ message }}</p>
 {% endfor %}
 
-<!--<form action="{{ url_for('login') }}" method="post">-->
-<!--    <input type="text" name="email" value="{{ email_value }}" placeholder="email"/>-->
-<!--    <input type="password" name="password" value="{{ password_value }}" placeholder="Пароль"/>-->
-<!--    <input type="submit" value="Войти"/>-->
-<!--</form>-->
-
-<form method="POST" action="">
+<form method="POST" action="{{ url_for('signup') }}">
     {{ form.hidden_tag() }}
     {{ form.email }}
+    <span id="validationMessage"></span>
     {{ form.password }}
     {{ form.submit }}
 </form>
+{% endblock %}
 
+{% block scripts %}
+<script>
+    check_if_email_is_unique = function() {
+        $.ajax({
+            url: "{{ url_for('check_if_email_is_unique') }}",
+            type: 'POST',
+            data: $('form').serialize(),
+            success: function (resp) {
+                //     $( '#email_reg' ).after( "<span></span>" ).next().text(resp.message).addClass(resp.category);
+                $( '#validationMessage' ).text(resp.message).removeClass().addClass(resp.category);
+            },
+            error: function (response) {
+                console.log(response);
+            }
+        })
+    };
+    $( '#email_reg' ).focusout(check_if_email_is_unique);
+</script>
 {% endblock %}

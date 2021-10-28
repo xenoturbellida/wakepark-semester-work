@@ -90,5 +90,18 @@ def change_password():
     return render_template('security.html', form=form)
 
 
+@app.route('/check_email', methods=['POST'])
+def check_if_email_is_unique():
+    form = RegisterForm()
+    message = 'Email свободен'
+    category = 'validationSuccess'
+    try:
+        form.validate_email(form.email)
+    except ValidationError as e:
+        message = str(e)
+        category = 'validationError'
+    return jsonify(message=message, category=category)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
