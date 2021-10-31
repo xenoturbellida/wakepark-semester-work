@@ -10,22 +10,23 @@
 
 <main>
     <div class="container">
-        {% for m in range(10) %}
 
-        <div class="equipment-block eq-bl-{{ m }}">smt</div>
-        <button onclick="setTimer()">Настрой таймер</button>
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Установить таймер
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">30 + 10 минут</a>
-            <a class="dropdown-item" href="#">1 час + 10 минут</a>
-            <a class="dropdown-item" href="#">1 час 30 минут + 10 минут</a>
+        {% for i in range(10) %}
+
+        <div>
+            <div class="equipment-block" id="equipment-block-{{ i }}">smt</div>
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Установить таймер
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" id='30-minutes-block-{{ i }}' onclick="init_timer_30_minutes('{{ i }}')">30 + 10 минут</a>
+                <a class="dropdown-item" href="#">1 час + 10 минут</a>
+                <a class="dropdown-item" href="#">1 час 30 минут + 10 минут</a>
+            </div>
         </div>
 
         {% endfor %}
 
-        <div class="test">test</div>
     </div>
 </main>
 
@@ -34,21 +35,44 @@
 </footer>
 {% endblock %}
 
+
 {% block scripts %}
 <script>
-    setTimer = function () {
+    init_timer_custom_minutes = function (minutes, block_serial) {
         $.ajax({
-            type: 'POST',
-            url: '/cashier/ajax',
+            url: "{{ url_for('cashier.init_timer_on_equipment') }}",
+            // data: JSON.stringify(block_serial),
+            type: 'GET',
+            data: {'serial_number': block_serial, 'time_interval': minutes},
+            contentType: 'application/json',
             success: function (response) {
-                console.log(response)
+                console.log(response);
             },
             error: function (response) {
-                console.log('error: ')
-                console.log(response)
+                console.log(response);
             }
         })
     }
+
+    let reserve_time = 10;
+    init_timer_30_minutes = function (block_serial) {
+        init_timer_custom_minutes(30 + reserve_time, block_serial);
+    }
+
+    function update_timers() {
+        $.ajax({
+            url: "{{ url_for('cashier.update_timers_on_equipment') }}",
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (response) {
+                console.log(response);
+            }
+        })
+    }
+
+    let request_frequency = 5000;
+    $(setInterval(update_timers, request_frequency));
 
 </script>
 {% endblock %}
