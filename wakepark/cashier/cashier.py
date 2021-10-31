@@ -12,7 +12,11 @@ print(equipment_manager.units)
 
 @cashier.route('/equipment')
 def display_equipment():
-    return render_template('cashier/equipment.html')
+    global equipment_manager
+    equipment_manager.update_statuses_and_countdowns()
+    return render_template('cashier/equipment.html',
+                           units_number=units_number,
+                           statuses=equipment_manager.units_statuses)
 
 
 @cashier.route('/update_timers')
@@ -31,6 +35,14 @@ def init_timer_on_equipment():
     global equipment_manager
     equipment_manager.init_timer(serial_number, time_interval)
     return 'ajaxxxx'
+
+
+@cashier.route('/reset_timer')
+def reset_timer():
+    serial_number = int(request.args.get('serial_number'))
+    global equipment_manager
+    equipment_manager.reset_unit_status(serial_number)
+    return 'resp'
 
 
 @cashier.route('/tes')
