@@ -47,23 +47,35 @@
             contentType: 'application/json',
             success: function (response) {
                 console.log(response);
+                update_timers();
             },
             error: function (response) {
                 console.log(response);
             }
-        })
+        });
+
     }
 
-    let reserve_time = 10;
+    let reserve_time = 0;
     init_timer_30_minutes = function (block_serial) {
-        init_timer_custom_minutes(30 + reserve_time, block_serial);
+        init_timer_custom_minutes(1 + reserve_time, block_serial);
     }
 
     function update_timers() {
         $.ajax({
             url: "{{ url_for('cashier.update_timers_on_equipment') }}",
             success: function (response) {
-                console.log(response);
+                $('.equipment-block').each( function (i) {
+                    if (response.statuses[i] === 0) {
+                        $( this ).css('background-color', 'aquamarine');
+                    }
+                    else if (response.statuses[i] === 1) {
+                        $( this ).css('background-color', 'blue');
+                    }
+                    else if (response.statuses[i] === 2) {
+                        $( this ).css('background-color', 'red');
+                    }
+                    $( this ).text(response.countdowns[i]) } );
             },
             error: function (response) {
                 console.log(response);
@@ -71,7 +83,7 @@
         })
     }
 
-    let request_frequency = 5000;
+    let request_frequency = 1000;
     $(setInterval(update_timers, request_frequency));
 
 </script>

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 
 from wakepark.cashier.equipment_manager import EquipmentManager
 
@@ -19,7 +19,8 @@ def display_equipment():
 def update_timers_on_equipment():
     global equipment_manager
     equipment_manager.update_statuses_and_countdowns()
-    return 'updated'
+    return jsonify(statuses=equipment_manager.units_statuses,
+                   countdowns=equipment_manager.countdowns)
 
 
 @cashier.route('/init_timer', methods=['GET', 'POST'])

@@ -97,7 +97,12 @@ class EquipmentUnit:
             prefix = '-'
         hours_left = self.time_left.seconds // 3600
         minutes_left = (self.time_left.seconds - hours_left * 3600) // 60
-        self.time_left_str = f'{prefix}{hours_left}:{minutes_left}'
+        seconds_left = self.time_left.seconds - hours_left * 3600 - minutes_left * 60
+        hours_left = str(hours_left)
+        minutes_left = '0' + str(minutes_left) if minutes_left < 10 else str(minutes_left)
+        seconds_left = '0' + str(seconds_left) if seconds_left < 10 else str(seconds_left)
+        # self.time_left_str = prefix + hours_left + ':' + minutes_left + ':' + seconds_left
+        self.time_left_str = f'{prefix}{hours_left}:{minutes_left}:{seconds_left}'
 
 
 
