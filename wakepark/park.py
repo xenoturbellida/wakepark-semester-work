@@ -1,21 +1,24 @@
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_migrate import Migrate
 from sqlalchemy import update
 from werkzeug.security import generate_password_hash, check_password_hash
+from wtforms import ValidationError
 
 from wakepark.cashier.cashier import cashier
 from wakepark.forms import RegisterForm, LoginForm, ChangePasswordForm
 from wakepark.models import db, User
 
-DATABASE = 'database.db'
+# DATABASE = 'database.db'
+DATABASE = 'wakepark.db'
 DEBUG = True
 SECRET_KEY = 'thisisasecretkey'
-
+EXPLAIN_TEMPLATE_LOADING = False
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:tibobe78@localhost/wakepark'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.register_blueprint(cashier, url_prefix='/cashier')
 db.init_app(app)
@@ -51,14 +54,19 @@ def signup():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+    # TODO
     form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user:
-            if check_password_hash(user.password, form.password.data):
-                remember = bool(form.remember_me.data)
-                login_user(user, remember)
-                return "successfull login"
+    if current_user.is_authenticated:
+        flash('Вы уже вошли в аккаунт')
+        return render_template('login.html', form=form)
+    else:
+        if form.validate_on_submit():
+            user = User.query.filter_by(email=form.email.data).first()
+            if user:
+                if check_password_hash(user.password, form.password.data):
+                    remember = bool(form.remember_me.data)
+                    login_user(user, remember)
+                    return "successful login"
     return render_template('login.html', form=form)
 
 
