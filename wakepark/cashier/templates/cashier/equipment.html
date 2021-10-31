@@ -20,14 +20,14 @@
                 {% set reset_timer_button_visibility = 'visible' %}
             {% endif %}
             <div>
-                <div class="equipment-block" id="equipment-block-{{ i }}">smt</div>
+                <div class="equipment-block" id="equipment-block-{{ i }}"></div>
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="visibility:{{ set_timer_button_visibility }}">
                 Установить таймер
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" id='30-minutes-block-{{ i }}' onclick="init_timer_30_minutes('{{ i }}')">30 + 10 минут</a>
-                    <a class="dropdown-item" href="#">1 час + 10 минут</a>
-                    <a class="dropdown-item" href="#">1 час 30 минут + 10 минут</a>
+                    <a class="dropdown-item" onclick="init_timer_60_minutes('{{ i }}')">1 час + 10 минут</a>
+                    <a class="dropdown-item" onclick="init_timer_90_minutes('{{ i }}')">1 час 30 минут + 10 минут</a>
                 </div>
                 <button type="button" class="btn btn-secondary reset-button" onclick="reset_timer('{{ i }}')" style="visibility:{{ reset_timer_button_visibility }}">Отключить</button>
             </div>
@@ -78,8 +78,17 @@
     };
 
     let reserve_time = 0;
+
     init_timer_30_minutes = function (block_serial) {
         init_timer_custom_minutes(1 + reserve_time, block_serial);
+    };
+
+    init_timer_60_minutes = function (block_serial) {
+        init_timer_custom_minutes(60 + reserve_time, block_serial);
+    };
+
+    init_timer_90_minutes = function (block_serial) {
+        init_timer_custom_minutes(90 + reserve_time, block_serial);
     };
 
     function update_timers() {
