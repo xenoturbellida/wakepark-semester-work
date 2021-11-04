@@ -9,21 +9,25 @@ editor = Blueprint('editor', __name__, template_folder='templates', static_folde
 ### TODO: add the method
 is_editor = True
 ###
+PHOTO_SIZE = 1048576  # 1 MB
+UPLOAD_PHOTOS_DIR = 'photos'
 
 
 @editor.route('/add_post', methods=['GET', 'POST'])
 @login_required
 def add_post():
-
     if not is_editor:
         flash('Эта страница недоступна')
         return redirect('index.html')
+
     form = AddPostForm()
     if form.validate_on_submit():
-        ph = form.photos.data
-        print(ph)
-    # if request.method == 'POST':
-    #     # upload_files = request.files.getlist('photos')
-    #
-    #     print(upload_files)
+        if form.photos.data:
+            upload_files = request.files.getlist('photos')
+            file_path = None
+            if upload_files:
+                dir_path = os.path.join('editor', 'static', UPLOAD_PHOTOS_DIR)
+                for file in upload_files:
+                    file.save(os.path.join(dir_path, file.filename), buffer_size=PHOTO_SIZE)
+                    file.close()
     return render_template('editor/add_post.html', form=form)

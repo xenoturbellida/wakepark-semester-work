@@ -14,7 +14,7 @@
 <body>
 <h1>Hello, Editor!</h1>
 
-<form method="POST" action="">
+<form method="POST" action="{{url_for('.add_post')}}" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     {{ form.title }}
     {{ form.content }}
