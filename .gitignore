@@ -1,3 +1,4 @@
 .idea
 wakepark/__pycache__
 poetry.lock
+wakepark/editor/photos

@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms import ValidationError
 
 from wakepark.cashier.cashier import cashier
+from wakepark.editor.editor import editor
 from wakepark.forms import RegisterForm, LoginForm, ChangePasswordForm
 from wakepark.models import db, User
 
@@ -21,6 +22,7 @@ app.config.from_object(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:tibobe78@localhost/wakepark'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.register_blueprint(cashier, url_prefix='/cashier')
+app.register_blueprint(editor, url_prefix='/editor')
 db.init_app(app)
 
 migrate = Migrate(app, db)

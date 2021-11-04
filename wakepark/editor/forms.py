@@ -12,9 +12,10 @@ class Extension:
 
     def __call__(self, form, field):
         for file in field.data:
-            ext = file.rsplit('.', 1)[1]
-            if ext not in self.allowed_extensions:
-                raise ValidationError(self.message)
+            if file:
+                ext = file.filename.rsplit('.', 1)[1]
+                if ext not in self.allowed_extensions:
+                    raise ValidationError(self.message)
 
 
 extension = Extension

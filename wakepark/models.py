@@ -21,7 +21,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.Text, nullable=False)
     content = db.Column(db.Text)
-    pubdate = db.Column(db.Date, nullable=False)
+    pubdate = db.Column(db.DateTime, nullable=False)
     photos = relationship("Photo", back_populates='post')
 
 
@@ -29,6 +29,6 @@ class Photo(db.Model):
     __tablename__ = 'photos'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    path = db.Column(db.String(256))
+    path = db.Column(db.String(256), nullable=False)
     post_id = db.Column(db.Integer, ForeignKey('posts.id'))
     post = relationship('Post', back_populates='photos')
