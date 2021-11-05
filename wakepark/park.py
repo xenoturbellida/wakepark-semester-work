@@ -11,7 +11,6 @@ from wakepark.editor.helpers import ParkDatabase
 from wakepark.forms import RegisterForm, LoginForm, ChangePasswordForm
 from wakepark.models import db, User
 
-# DATABASE = 'database.db'
 DATABASE = 'wakepark.db'
 DEBUG = True
 SECRET_KEY = 'thisisasecretkey'
@@ -19,7 +18,6 @@ EXPLAIN_TEMPLATE_LOADING = False
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:tibobe78@localhost/wakepark'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.register_blueprint(cashier, url_prefix='/cashier')
@@ -38,10 +36,13 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@app.route('/')
-def index():
+@app.route('/<int:page>')
+def index(page):
     pdb = ParkDatabase(db)
-    return render_template('index.html', posts=pdb.get_posts())
+    return render_template('index.html',
+                           posts=pdb.get_posts(page),
+                           page=page,
+                           total_pages=pdb.get_total_pages())
 
 
 @app.route('/signup', methods=['GET', 'POST'])
