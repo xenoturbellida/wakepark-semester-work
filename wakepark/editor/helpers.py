@@ -1,4 +1,6 @@
 import os
+from math import ceil
+
 import psycopg2
 from datetime import datetime
 
@@ -7,8 +9,9 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from ..models import Post, db, Photo
 
-PHOTO_SIZE = 1048576  # 1 MB
+PHOTO_SIZE = 10485760  # 10 MB
 UPLOAD_PHOTOS_DIR = 'photos'
+POSTS_PER_PAGE = 3
 
 
 def add_post_to_db(form):
@@ -54,7 +57,6 @@ def add_post_to_db(form):
                 finally:
                     photo_serial_number += 1
             db.session.commit()
-            print(post.photos)
         else:
             messages_to_flash.append(('Произошла непредвиденная ошибка при добавлении фотографий', 'error'))
     return messages_to_flash
@@ -64,7 +66,7 @@ class ParkDatabase:
     def __init__(self, db):
         self.db = db
 
-    def get_posts(self):
+    def get_posts(self, page: int):
         conn = psycopg2.connect(
                 dbname="wakepark",
                 user="postgres",
@@ -74,7 +76,10 @@ class ParkDatabase:
         cur = conn.cursor()
         if cur:
             try:
-                query = "SELECT * FROM posts;"
+                query = f"SELECT * FROM posts " \
+                        f"ORDER BY pubdate " \
+                        f"OFFSET {(page - 1) * POSTS_PER_PAGE} ROWS " \
+                        f"FETCH NEXT {POSTS_PER_PAGE} ROWS ONLY;"
                 cur.execute(query)
                 res = cur.fetchall()
                 if res:
@@ -85,3 +90,27 @@ class ParkDatabase:
                 cur.close()
                 conn.close()
         return []
+
+    def get_total_pages(self):
+        conn = psycopg2.connect(
+                dbname="wakepark",
+                user="postgres",
+                host="localhost",
+                password="tibobe78"
+            )
+        cur = conn.cursor()
+        if cur:
+            try:
+                query = f"SELECT COUNT(*) FROM posts;"
+                cur.execute(query)
+                res = cur.fetchall()
+
+                if res:
+                    ans = ceil(res[0][0] / POSTS_PER_PAGE)
+                    return ans
+            except psycopg2.Error as err:
+                print(err)
+            finally:
+                cur.close()
+                conn.close()
+        return -1

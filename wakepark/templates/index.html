@@ -17,4 +17,11 @@
 <p style="white-space: pre-line">{{ post[2] }}</p>
 {% endfor %}
 
+{% if page != 1 %}
+    <a href="{{ url_for('index', page=page-1) }}">Предыдущая</a>
+{% endif %}
+
+{% if page != total_pages %}
+    <a href="{{ url_for('index', page=page+1) }}">Следующая</a>
+{% endif %}
 {% endblock %}
