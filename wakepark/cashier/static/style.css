@@ -8,3 +8,7 @@
     vertical-align: middle;
     line-height: 10vw;
 }
+
+.reset-button {
+    visibility: hidden;
+}
