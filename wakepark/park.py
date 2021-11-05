@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
+from flask import Flask, render_template, redirect, url_for, flash, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_migrate import Migrate
 from sqlalchemy import update
@@ -6,29 +6,33 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms import ValidationError
 
 from wakepark.cashier.cashier import cashier
+from wakepark.config import DevelopmentConfig
 from wakepark.editor.editor import editor
 from wakepark.editor.helpers import ParkDatabase
 from wakepark.forms import RegisterForm, LoginForm, ChangePasswordForm
 from wakepark.models import db, User
 
-DATABASE = 'wakepark.db'
-DEBUG = True
-SECRET_KEY = 'thisisasecretkey'
-EXPLAIN_TEMPLATE_LOADING = False
-
-app = Flask(__name__)
-app.config.from_object(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:tibobe78@localhost/wakepark'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.register_blueprint(cashier, url_prefix='/cashier')
-app.register_blueprint(editor, url_prefix='/editor')
-db.init_app(app)
-
-migrate = Migrate(app, db)
 
 login_manager = LoginManager()
-login_manager.init_app(app)
 login_manager.login_view = "login"
+migrate = Migrate()
+
+
+def create_app():
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object(DevelopmentConfig())
+
+    login_manager.init_app(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
+
+    app.register_blueprint(cashier, url_prefix='/cashier')
+    app.register_blueprint(editor, url_prefix='/editor')
+
+    return app
+
+
+app = create_app()
 
 
 @login_manager.user_loader
