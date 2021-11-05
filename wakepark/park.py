@@ -7,6 +7,7 @@ from wtforms import ValidationError
 
 from wakepark.cashier.cashier import cashier
 from wakepark.editor.editor import editor
+from wakepark.editor.helpers import ParkDatabase
 from wakepark.forms import RegisterForm, LoginForm, ChangePasswordForm
 from wakepark.models import db, User
 
@@ -39,7 +40,8 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    pdb = ParkDatabase(db)
+    return render_template('index.html', posts=pdb.get_posts())
 
 
 @app.route('/signup', methods=['GET', 'POST'])

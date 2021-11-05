@@ -1,4 +1,5 @@
 import os
+import psycopg2
 from datetime import datetime
 
 from flask import request
@@ -57,3 +58,30 @@ def add_post_to_db(form):
         else:
             messages_to_flash.append(('Произошла непредвиденная ошибка при добавлении фотографий', 'error'))
     return messages_to_flash
+
+
+class ParkDatabase:
+    def __init__(self, db):
+        self.db = db
+
+    def get_posts(self):
+        conn = psycopg2.connect(
+                dbname="wakepark",
+                user="postgres",
+                host="localhost",
+                password="tibobe78"
+            )
+        cur = conn.cursor()
+        if cur:
+            try:
+                query = "SELECT * FROM posts;"
+                cur.execute(query)
+                res = cur.fetchall()
+                if res:
+                    return res
+            except psycopg2.Error as err:
+                print(err)
+            finally:
+                cur.close()
+                conn.close()
+        return []

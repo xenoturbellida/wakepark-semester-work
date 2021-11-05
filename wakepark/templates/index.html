@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>Войти</h1>
+<h1>Главная страница</h1>
 {% endblock %}
 
 {% block content %}
@@ -11,5 +11,10 @@
 
 <a href="{{ url_for('login') }}">Войти</a>
 <a href="{{ url_for('signup') }}">Зарегистрироваться</a>
+
+{% for post in posts %}
+<h2>{{ post[1] }}</h2>
+<p style="white-space: pre-line">{{ post[2] }}</p>
+{% endfor %}
 
 {% endblock %}
