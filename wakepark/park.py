@@ -43,6 +43,11 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+@app.route('/')
+def index_without_page():
+    return redirect(url_for('index', page=1))
+
+
 @app.route('/<int:page>')
 def index(page):
     pdb = ParkDatabase(db)
@@ -66,7 +71,6 @@ def signup():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    # TODO
     form = LoginForm()
     if current_user.is_authenticated:
         flash('Вы уже вошли в аккаунт')
@@ -86,7 +90,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for("index_without_page"))
 
 
 @app.route('/profile')

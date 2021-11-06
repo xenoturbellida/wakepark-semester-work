@@ -1,23 +1,47 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
 
-{% block header %}
-<h1>Войти</h1>
-{% endblock %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    </script>
+</head>
 
-{% block content %}
-{% for cat, message in get_flashed_messages(True) %}
-<p class="{{cat}}">{{ message }}</p>
-{% endfor %}
+<body class="text-center">
 
+    <main class="container" style="width: 25%">
+      <form method="POST" action="{{ url_for('login') }}">
+        <h1 class="h3 mb-3 fw-normal">Пожалуйста, войдите</h1>
+          {{ form.csrf_token }}
 
-<form method="POST" action="">
-    {{ form.hidden_tag() }}
-    {{ form.email }}
-    {{ form.password }}
-    {{ form.submit }}
-    {{ form.remember_me }}
-    {{ form.remember_me.label }}
+        <div class="form-floating">
+            {{ form.email(class_="form-control") }}
+            {{ form.email.label }}
 
-</form>
+        </div>
+        <div class="form-floating">
+            {{ form.password(class_="form-control") }}
+            {{ form.password.label }}
+        </div>
 
-{% endblock %}
+        <div class="checkbox mb-3">
+            {{ form.remember_me }}
+            {{ form.remember_me.label }}
+        </div>
+          {{ form.submit(class_="w-100 btn btn-lg btn-primary") }}
+      </form>
+    </main>
+
+    {% for cat, message in get_flashed_messages(True) %}
+    <p class="{{cat}}">{{ message }}</p>
+    {% endfor %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

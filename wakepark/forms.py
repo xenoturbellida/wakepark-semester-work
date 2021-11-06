@@ -7,10 +7,12 @@ from wakepark.models import User
 
 class RegisterForm(FlaskForm):
     email = StringField(
+        label="Email",
         validators=[InputRequired(), length(min=4, max=40)],
         render_kw={"placeholder": 'Email', 'id': 'email_reg'})
 
     password = PasswordField(
+        label="Пароль",
         validators=[InputRequired(), length(min=4, max=20)],
         render_kw={"placeholder": "Пароль"})
 
@@ -24,10 +26,12 @@ class RegisterForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = StringField(
+        label='Email',
         validators=[InputRequired(), length(min=4, max=40)],
         render_kw={"placeholder": 'Email'})
 
     password = PasswordField(
+        label='Пароль',
         validators=[InputRequired(), length(min=4, max=20)],
         render_kw={"placeholder": "Пароль"})
 
