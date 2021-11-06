@@ -7,7 +7,6 @@ cashier = Blueprint('cashier', __name__, template_folder='templates', static_fol
 # TODO synchronize with the template
 units_number = 10
 equipment_manager = EquipmentManager(units_number)
-print(equipment_manager.units)
 
 
 @cashier.route('/equipment')
@@ -48,22 +47,3 @@ def reset_timer():
 @cashier.route('/tes')
 def tes():
     return render_template('cashier/tes.html')
-
-
-
-'''
-db = None
-@cashier.before_request
-def before_request():
-    global db
-    db = g.get('link_db')
-
-
-@cashier.teardown_request
-def teardown_request(request):
-    global db
-    db = None
-    return request
-'''
-
-
