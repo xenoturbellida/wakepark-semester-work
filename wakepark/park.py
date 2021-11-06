@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, flash, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_migrate import Migrate
+from flask_wtf import CSRFProtect
 from sqlalchemy import update
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms import ValidationError
@@ -16,6 +17,7 @@ from wakepark.models import db, User
 login_manager = LoginManager()
 login_manager.login_view = "login"
 migrate = Migrate()
+csrf = CSRFProtect()
 
 
 def create_app():
@@ -25,6 +27,7 @@ def create_app():
     login_manager.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
+    csrf.init_app(app)
 
     app.register_blueprint(cashier, url_prefix='/cashier')
     app.register_blueprint(editor, url_prefix='/editor')

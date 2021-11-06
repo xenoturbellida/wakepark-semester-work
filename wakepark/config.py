@@ -1,6 +1,7 @@
 class Config(object):
     TESTING = False
     SECRET_KEY = 'thisisasecretkey'
+    WTF_CSRF_ENABLED = True
 
 
 class ProductionConfig(Config):
@@ -15,3 +16,4 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:tibobe78@localhost/wakepark_test'
     TESTING = True
+    WTF_CSRF_ENABLED = True

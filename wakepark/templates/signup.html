@@ -10,7 +10,7 @@
 {% endfor %}
 
 <form method="POST" action="{{ url_for('signup') }}">
-    {{ form.hidden_tag() }}
+    {{ form.csrf_token }}
     {{ form.email }}
     <span id="validationMessage"></span>
     {{ form.password }}
