@@ -11,6 +11,7 @@ from wakepark.config import DevelopmentConfig
 from wakepark.editor.editor import editor
 from wakepark.editor.helpers import ParkDatabase
 from wakepark.forms import RegisterForm, LoginForm, ChangePasswordForm
+from wakepark.helpers import get_post
 from wakepark.models import db, User
 
 
@@ -51,10 +52,26 @@ def index_without_page():
 @app.route('/<int:page>')
 def index(page):
     pdb = ParkDatabase(db)
+    posts = pdb.get_posts(page)
+    pubdates = []
+    for post in posts:
+        pubdates.append(post[3].isoformat())
     return render_template('index.html',
-                           posts=pdb.get_posts(page),
+                           posts=posts,
+                           pubdates=pubdates,
                            page=page,
-                           total_pages=pdb.get_total_pages())
+                           total_pages=pdb.get_total_pages(),
+                           )
+
+
+@app.route('/post/<pubdate>')
+def post_content(pubdate):
+    post = get_post(pubdate)
+    return render_template('post.html',
+                           title=post.title,
+                           content=post.content,
+                           photos=post.photos,
+                           total_img=len(post.photos))
 
 
 @app.route('/signup', methods=['GET', 'POST'])

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+  {% extends 'base.html' %}
 
 {% block content %}
 <main>
@@ -26,27 +26,20 @@
 
     <div class="container">
 
-    {% for cat, message in get_flashed_messages(True) %}
-    <p class="{{cat}}">{{ message }}</p>
-    {% endfor %}
+      {% for cat, message in get_flashed_messages(True) %}
+      <p class="{{ cat }}">{{ message }}</p>
+      {% endfor %}
 
-    {% set i = namespace(value=0) %}
-    {% for post in posts %}
-      <h2>{{i.value}}</h2>
-    <a href="{{ url_for('post_content', pubdate=pubdates[i.value]) }}">{{ post[1] }}</a>
-    <p style="white-space: pre-line">{{ post[2] }}</p>
-    {% set i.value = i.value + 1 %}
-    {% endfor %}
+      <title>{{ title }}</title>
+      <p style="white-space: pre-line">{{ content }}</p>
 
-    {% if page != 1 %}
-        <a href="{{ url_for('index', page=page-1) }}">Предыдущая</a>
-    {% endif %}
+      <img src="{{ url_for('static', filename=photos[0].path) }}">
+      <p>{{ photos[0].path }}</p>
+      <p>{{ url_for('static', filename=photos[0].path) }}</p>
 
-    {% if page != total_pages %}
-        <a href="{{ url_for('index', page=page+1) }}">Следующая</a>
-    {% endif %}
-    {% endblock %}
+
+
     </div>
 </main>
-
+{% endblock %}
 <footer></footer>
